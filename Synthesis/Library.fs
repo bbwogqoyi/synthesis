@@ -53,10 +53,11 @@ let minmax (a,b,c,d) =
   helper (a,a) ([a;b;c;d])
 
 let isLeap year =
-  match year<1582 with
-  | true -> failwith "Value of the Year is not allowed to be less than 1582"
-  | _ -> 
-    match year%4 = 0 && year%400<>0 && year 
+  //match year<1582 with
+  //| true -> failwith "Value of the Year is not allowed to be less than 1582"
+  //| _ -> 
+  //  match year%4 = 0 && year%400<>0 && year 
+  failwith "Not implemented"
 
 let month _ =
     failwith "Not implemented"
