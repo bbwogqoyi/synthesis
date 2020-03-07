@@ -53,20 +53,47 @@ let minmax (a,b,c,d) =
   helper (a,a) ([a;b;c;d])
 
 let isLeap year =
-  //match year<1582 with
-  //| true -> failwith "Value of the Year is not allowed to be less than 1582"
-  //| _ -> 
-  //  match year%4 = 0 && year%400<>0 && year 
-  failwith "Not implemented"
+  match year<1582  with
+  | true -> failwith "Value of the Year is not allowed to be less than 1582"
+  | _ -> 
+    match year%4 = 0 && year%100 <> 0 with
+    | true -> true
+    | false -> year%400 = 0
 
-let month _ =
-    failwith "Not implemented"
+let month num =
+  let monthIndex = [ ("January", 31); ("February", 28); ("March", 31); ("April", 30); ("May", 31); ("June", 30);
+    ("July", 31); ("August", 31); ("September", 30); ("October", 31); ("November", 30); ("December", 31) ]
 
-let toBinary _ =
-    failwith "Not implemented"
+  let rec getItemOnIndex index alist =
+    match (index = num, alist) with
+    | (true, head::_) -> head
+    | (_, _::tail) -> getItemOnIndex (index+1) tail
+    | (_, []) -> failwith "Value less than 1 or greater than 12 are not allowed"
 
-let bizFuzz _ =
-    failwith "Not implemented"
+  getItemOnIndex 1 monthIndex
+
+let toBinary num =
+  let rec helper binary decimal =
+    match decimal with
+    | 0 | 1 -> (string)decimal+binary
+    | _ -> helper (((string)(decimal%2))+binary) (decimal/2)
+  
+  match num<0 with
+  | true -> failwith "Negative valuea not allowed"
+  | _ -> helper "" num
+
+let bizFuzz num =
+  let isDivisibleBy3 num = num%3=0
+  let isDivisibleBy5 num = num%5=0
+  let isDivisibleBy3And5 num = num%3=0 && num%5=0
+
+  let rec countDivisible predicate count value = 
+    match (predicate value), value>num with
+    | _, true -> count
+    | true, _ -> countDivisible predicate (count+1) (value+1)
+    | _ -> countDivisible predicate count (value+1)
+
+  (countDivisible isDivisibleBy3 0 3 , countDivisible isDivisibleBy5 0 3, countDivisible isDivisibleBy3And5 0 3)
 
 let monthDay _ _ =
     failwith "Not implemented"
