@@ -95,8 +95,37 @@ let bizFuzz num =
 
   (countDivisible isDivisibleBy3 0 3 , countDivisible isDivisibleBy5 0 3, countDivisible isDivisibleBy3And5 0 3)
 
-let monthDay _ _ =
-    failwith "Not implemented"
+let monthDay d y =
+  let getMonth = fun monthIndex isLeapYear ->
+    match monthIndex with
+    | 1 -> ("January", 31)
+    | 2 -> 
+      match isLeapYear with 
+      | true -> ("February", 29)
+      | _ -> ("February", 28)
+    | 3 -> ("March", 31)
+    | 4 -> ("April", 30)
+    | 5 -> ("May", 31)
+    | 6 -> ("June", 30)
+    | 7 -> ("July", 31)
+    | 8 -> ("August", 31)
+    | 9 -> ("September", 30)
+    | 10 -> ("October", 31)
+    | 11 -> ("November", 30)
+    | 12 -> ("December", 31)
+    | _ -> failwith ""
 
+  let isLeapYear = isLeap y
+  let rec helper monthIndex start =
+    let (month, days) = getMonth monthIndex isLeapYear
+    let daysCount = start+days
+    match  daysCount>= d with
+    | false-> helper (monthIndex+1) (days+start)
+    | true -> month
+
+  match d<1 with
+  | true -> failwith ""
+  | false -> helper 1 0
+  
 let coord _ =
     failwith "Not implemented"
