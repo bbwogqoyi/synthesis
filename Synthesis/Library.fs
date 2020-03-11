@@ -126,6 +126,23 @@ let monthDay d y =
   match d<1 with
   | true -> failwith ""
   | false -> helper 1 0
-  
+
+let sqrt n =
+  let rec calculate guess i =
+    match i with
+    | 10 -> guess
+    | _ -> 
+      let g = (guess + n/guess) / 2.0
+      calculate g (i+1)
+
+  match n <= 0.0 with
+  | true -> None
+  | _ -> Some (calculate (n/2.0) 0)
+ 
 let coord _ =
-    failwith "Not implemented"
+//let coord (x1, y1) (x2, y2) : double =
+  //let result = (x1-x2)**2.0 + (y1-y2)**2.0
+  //match sqrt result with 
+  //| Some v -> v
+  //| None -> failwith ""
+  failwith ""
