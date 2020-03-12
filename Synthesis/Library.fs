@@ -66,14 +66,20 @@ let month num =
   getItemOnIndex 1 monthIndex
 
 let toBinary num =
+  let stringify binaryDigit = 
+    match binaryDigit with 
+    | 0 -> "0"
+    | _ -> "1"
+
   let rec helper binary decimal =
     match decimal with
-    | 0 | 1 -> (string)decimal+binary
-    | _ -> helper (((string)(decimal%2))+binary) (decimal/2)
+    | 0 | 1 -> (stringify decimal) + binary
+    | _ -> helper ((stringify (decimal%2)) + binary) (decimal/2)
   
   match num<0 with
   | true -> failwith "Negative valuea not allowed"
   | _ -> helper "" num
+
 
 let bizFuzz num =
   let isDivisibleBy3 num = num%3=0
