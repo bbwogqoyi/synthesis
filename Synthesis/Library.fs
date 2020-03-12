@@ -43,11 +43,9 @@ let digits num =
   countDigits 0 num
 
 let minmax (a,b,c,d) =
-  let rec helper (smallest, largest) alist =
-    match alist with 
-    | [] -> (smallest, largest)
-    | head::tail -> helper ( (min smallest head), (max largest head) ) tail
-  helper (a,a) ([a;b;c;d])
+  let smallest = min a b |> min c |> min d
+  let largest = max a b |> max c |> max d
+  (smallest, largest)
 
 let isLeap year =
   match year<1582, year%4 = 0 && year%100 <> 0 with
