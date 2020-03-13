@@ -1,9 +1,7 @@
 ﻿module Synthesis
 
 let abelar num =
-  let isWithInRange = num > 12 && num < 3097
-  let isDivisibleBy12 = (num % 12 = 0)
-  isWithInRange && isDivisibleBy12
+  num > 12 && num < 3097 && (num % 12 = 0)
 
 let area baseLength height =
   match baseLength>=0.0 && height>=0.0 with
@@ -39,26 +37,21 @@ let toTime totalTime =
   
 let digits num =
   let rec countDigits count rem =
-    match rem <> 0, count with
-    | true, _ -> countDigits (count+1) (rem/10)
-    | _, 0 -> count+1
-    | _ -> count
+    match rem <> 0 with
+    | true -> countDigits (count+1) (rem/10)
+    | _ -> max count 1
   countDigits 0 num
 
 let minmax (a,b,c,d) =
-  let rec helper (smallest, largest) alist =
-    match alist with 
-    | [] -> (smallest, largest)
-    | head::tail -> helper ( (min smallest head), (max largest head) ) tail
-  helper (a,a) ([a;b;c;d])
+  let smallest = min a b |> min c |> min d
+  let largest = max a b |> max c |> max d
+  (smallest, largest)
 
 let isLeap year =
-  match year<1582  with
-  | true -> failwith "Value of the Year is not allowed to be less than 1582"
-  | _ -> 
-    match year%4 = 0 && year%100 <> 0 with
-    | true -> true
-    | false -> year%400 = 0
+  match year<1582, year%4 = 0 && year%100 <> 0 with
+  | true, _ -> failwith "Value of the Year is not allowed to be less than 1582"
+  | _, false -> year%400 = 0
+  | _, true -> true
 
 let month num =
   let monthIndex = [ ("January", 31); ("February", 28); ("March", 31); ("April", 30); ("May", 31); ("June", 30);
@@ -73,14 +66,20 @@ let month num =
   getItemOnIndex 1 monthIndex
 
 let toBinary num =
+  let stringify binaryDigit = 
+    match binaryDigit with 
+    | 0 -> "0"
+    | _ -> "1"
+
   let rec helper binary decimal =
     match decimal with
-    | 0 | 1 -> (string)decimal+binary
-    | _ -> helper (((string)(decimal%2))+binary) (decimal/2)
+    | 0 | 1 -> (stringify decimal) + binary
+    | _ -> helper ((stringify (decimal%2)) + binary) (decimal/2)
   
   match num<0 with
   | true -> failwith "Negative valuea not allowed"
   | _ -> helper "" num
+
 
 let bizFuzz num =
   let isDivisibleBy3 num = num%3=0
@@ -97,36 +96,23 @@ let bizFuzz num =
 
 let monthDay d y =
   let getMonth = fun monthIndex isLeapYear ->
-    match monthIndex with
-    | 1 -> ("January", 31)
-    | 2 -> 
+    match monthIndex=2 with
+    | false -> month monthIndex 
+    | _ -> 
       match isLeapYear with 
       | true -> ("February", 29)
       | _ -> ("February", 28)
-    | 3 -> ("March", 31)
-    | 4 -> ("April", 30)
-    | 5 -> ("May", 31)
-    | 6 -> ("June", 30)
-    | 7 -> ("July", 31)
-    | 8 -> ("August", 31)
-    | 9 -> ("September", 30)
-    | 10 -> ("October", 31)
-    | 11 -> ("November", 30)
-    | 12 -> ("December", 31)
-    | _ -> failwith ""
 
   let isLeapYear = isLeap y
   let rec helper monthIndex start =
     let (month, days) = getMonth monthIndex isLeapYear
     let daysCount = start+days
-    match  daysCount>= d with
+    match d>=1 && daysCount>= d with
     | false-> helper (monthIndex+1) (days+start)
     | true -> month
 
-  match d<1 with
-  | true -> failwith ""
-  | false -> helper 1 0
-
+  helper 1 0
+  
 let sqrt n =
   let rec calculate guess i =
     match i with
@@ -136,13 +122,13 @@ let sqrt n =
       calculate g (i+1)
 
   match n <= 0.0 with
-  | true -> failwith ""
-  | _ -> (calculate (n/2.0) 0)
- 
-let coord (x1:double, y1:double) =
-  let distance (x2, y2) = sqrt ( (x1-x2)**2.0 + (y1-y2)**2.0 )
-  let isInsideRect (x2, y2) width height =
-    let x_br = x2+height
-    true
+  | true -> None
+  | _ -> Some (calculate (n/2.0) 0)
 
-  (distance, isInsideRect)
+let coord _ =
+  //let coord (x1, y1) (x2, y2) : double =
+  //let result = (x1-x2)**2.0 + (y1-y2)**2.0
+  //match sqrt result with 
+  //| Some v -> v
+  //| None -> failwith ""
+  failwith ""
