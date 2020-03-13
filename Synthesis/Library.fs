@@ -136,13 +136,13 @@ let sqrt n =
       calculate g (i+1)
 
   match n <= 0.0 with
-  | true -> None
-  | _ -> Some (calculate (n/2.0) 0)
+  | true -> failwith ""
+  | _ -> (calculate (n/2.0) 0)
  
-let coord _ =
-//let coord (x1, y1) (x2, y2) : double =
-  //let result = (x1-x2)**2.0 + (y1-y2)**2.0
-  //match sqrt result with 
-  //| Some v -> v
-  //| None -> failwith ""
-  failwith ""
+let coord (x1:double, y1:double) =
+  let distance (x2, y2) = sqrt ( (x1-x2)**2.0 + (y1-y2)**2.0 )
+  let isInsideRect (x2, y2) width height =
+    let x_br = x2+height
+    true
+
+  (distance, isInsideRect)
