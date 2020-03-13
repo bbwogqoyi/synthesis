@@ -122,13 +122,15 @@ let sqrt n =
       calculate g (i+1)
 
   match n <= 0.0 with
-  | true -> None
-  | _ -> Some (calculate (n/2.0) 0)
+  | true -> failwith ""
+  | _ -> (calculate (n/2.0) 0)
 
-let coord _ =
-  //let coord (x1, y1) (x2, y2) : double =
-  //let result = (x1-x2)**2.0 + (y1-y2)**2.0
-  //match sqrt result with 
-  //| Some v -> v
-  //| None -> failwith ""
-  failwith ""
+let coord (x1:double, y1:double) =
+  let distance (x2, y2) = 
+    sqrt ( (x1-x2)**2.0 + (y1-y2)**2.0 )
+
+  let isInsideRect (x_tl, y_tl) width height =
+    let x_br, y_br = (x_tl+width), (y_tl-height)
+    x1>=x_tl && y1<=y_tl && x1<=x_br && y1>=y_br
+
+  (distance, isInsideRect)
